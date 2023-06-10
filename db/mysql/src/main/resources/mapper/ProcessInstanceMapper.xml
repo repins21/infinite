@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repins.infinite.db.mysql.instance.ProcessInstanceMapper">
+
+    <sql id="baseColumns">
+        `id`,
+        `name`,
+        `deployment_id`,
+        `deployment_version_id`,
+        `process_instance_id`,
+        `start_by`,
+        `start_time`,
+        `end_time`,
+        `process_state`
+    </sql>
+
+    <insert id="insertProcessInstance" parameterType="com.repins.infinite.engine.model.ProcessInstance">
+        insert into inf_ru_process_instance(<include refid="baseColumns"></include>)
+        values (#{id},#{name},#{deploymentId},#{deploymentVersionId},#{processInstanceId},#{startBy},#{startTime},#{endTime},#{processState})
+    </insert>
+</mapper>

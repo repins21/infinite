@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repins.infinite.db.mysql.instance.TaskInstanceMapper">
+
+    <sql id="baseColumns">
+        `id`,
+        `task_id`,
+        `process_instance_id`,
+        `element_name`,
+        `element_key`,
+        `element_type`,
+        `source_task_instance_id`,
+        `assignee`,
+        `instance_state`,
+        `start_time`,
+        `end_time`
+    </sql>
+    <insert id="insertBatchTaskInstances" parameterType="java.util.List">
+        insert into inf_ru_task_instance (<include refid="baseColumns"></include>)
+            values
+            <foreach collection="taskInstances" item="item" index="index" separator="," >
+                (#{item.id},#{item.taskId},#{item.processInstanceId},#{item.elementName},#{item.elementKey},#{item.elementType},
+                 #{item.sourceTaskInstanceId},#{item.assignee},#{item.instanceState},#{item.startTime},#{item.endTime})
+            </foreach>
+    </insert>
+
+</mapper>

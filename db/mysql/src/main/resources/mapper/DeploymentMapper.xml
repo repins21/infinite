@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.repins.infinite.db.mysql.deployment.DeploymentMapper">
+
+    <sql id="baseColumns">
+        `id`,
+        `key`,
+        `rev`,
+        `name`,
+        `meta_info`,
+        `deployment_id`,
+        `deployment_version_id`,
+        `category`,
+        `version`,
+        `remark`,
+        `meta_info`,
+        `create_by`,
+        `update_by`,
+        `create_time`,
+        `update_time`,
+        deploy_by,
+        deploy_time,
+        deploy_status
+    </sql>
+
+    <sql id="baseInsertColumns">
+        `id`,
+        `key`,
+        `rev`,
+        `name`,
+        `deployment_id`,
+        `deployment_version_id`,
+        `category`,
+        `version`,
+        `remark`,
+        `meta_info`,
+        `create_by`,
+        `update_by`,
+        `create_time`,
+        `update_time`,
+         deploy_status
+    </sql>
+
+    <insert id="insertProcessDefinition" parameterType="com.repins.infinite.engine.model.ProcessDeployment"
+            keyProperty="id">
+        insert into inf_de_deployment(<include refid="baseInsertColumns"/>)
+        values (#{id}, #{key},#{rev}, #{name}, #{deploymentId},#{deploymentVersionId},#{category},#{version},#{remark},#{metaInfo},
+        #{createBy},#{updateBy},#{createTime},#{updateTime},#{deployStatus})
+    </insert>
+
+    <update id="updateDeploymentById" parameterType="com.repins.infinite.engine.model.ProcessDeployment">
+        update inf_de_deployment
+            <set>
+            <if test="deployStatus != null"> deploy_status = #{deployStatus},</if>
+            <if test="deployTime != null"> deploy_time = #{deployTime},</if>
+            <if test="deployBy != null"> deploy_by = #{deployBy},</if>
+            <if test="rev != null"> rev = #{rev},</if>
+            </set>
+        where id = #{id} and rev is null
+    </update>
+
+    <select id="findByDeploymentId" resultType="com.repins.infinite.engine.model.ProcessDeployment">
+        select
+        <include refid="baseColumns"></include>
+        from inf_de_deployment
+        where deployment_id = #{deploymentId}
+    </select>
+    <select id="findByDeploymentVersionId" resultType="com.repins.infinite.engine.model.ProcessDeployment">
+        select
+        <include refid="baseColumns"></include>
+        from inf_de_deployment
+        where deployment_version_id = #{deploymentVersionId} and deploy_status = #{deployed}
+    </select>
+</mapper>
