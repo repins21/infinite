@@ -1,6 +1,7 @@
 package com.repins.infinite.engine.executor.process;
 
 import com.repins.infinite.engine.context.RuntimeContext;
+import com.repins.infinite.engine.db.repository.ExecutionRepository;
 import com.repins.infinite.engine.db.repository.ProcessInstanceRepository;
 import com.repins.infinite.engine.db.repository.ProcessRepository;
 import com.repins.infinite.engine.db.repository.TaskInstanceRepository;
@@ -37,6 +38,12 @@ public class DefaultProcessInstanceExecutor extends AbstractProcessInstanceExecu
         // persistent taskInstances
         TaskInstanceRepository taskInstanceRepository =
                 (TaskInstanceRepository) repositoryFinder.findRepository(TaskInstanceRepository.class);
-        taskInstanceRepository.insertBatchTaskInstances(runtimeContext.getCompletedTasks());
+        taskInstanceRepository.insertBatchTaskInstances(runtimeContext.getTasks());
+
+        // persistent executions
+        ExecutionRepository executionRepository =
+                (ExecutionRepository) repositoryFinder.findRepository(ExecutionRepository.class);
+        executionRepository.insertBatchExecution(runtimeContext.getExecutions());
+
     }
 }

@@ -1,6 +1,7 @@
 package com.repins.infinite.engine.configuration;
 
 import com.repins.infinite.engine.ProcessEngine;
+import com.repins.infinite.engine.behavior.TaskAssigneeBehavior;
 import com.repins.infinite.engine.context.GlobalContext;
 import com.repins.infinite.engine.db.DatabaseType;
 import com.repins.infinite.engine.executor.factory.AbstractActivityExecutorFactory;
@@ -40,7 +41,7 @@ public interface ProcessEngineConfiguration {
 
     ProcessValidator getProcessValidator();
 
-    void  setProcessValidator(ProcessValidator validator);
+    void setProcessValidator(ProcessValidator validator);
 
 
     IdGenerator getIdGenerator();
@@ -55,5 +56,9 @@ public interface ProcessEngineConfiguration {
     AbstractActivityExecutorFactory getAbstractActivityFactory();
 
     void setAbstractActivityFactory(AbstractActivityExecutorFactory abstractActivityFactory);
+
+    TaskAssigneeBehavior getTaskAssigneeBehavior();
+
+    void setTaskAssigneeBehavior(TaskAssigneeBehavior taskAssigneeBehavior);
 
 }

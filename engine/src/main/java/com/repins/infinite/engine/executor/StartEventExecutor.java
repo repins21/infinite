@@ -2,8 +2,10 @@ package com.repins.infinite.engine.executor;
 
 import com.repins.infinite.engine.context.RuntimeContext;
 import com.repins.infinite.engine.element.base.BaseElement;
+import com.repins.infinite.engine.model.Execution;
 import com.repins.infinite.engine.model.ProcessInstance;
 import com.repins.infinite.engine.model.TaskInstance;
+import com.repins.infinite.engine.state.ExecutionState;
 import com.repins.infinite.engine.state.TaskInstanceState;
 
 import java.time.LocalDateTime;
@@ -21,9 +23,12 @@ public class StartEventExecutor extends AbstractActivityExecutor {
 
         ProcessInstance processInstance = runtimeContext.getProcessInstance();
 
+        Execution execution = buildExecution(runtimeContext, startEventElement, processInstance);
         TaskInstance startEventTask = buildTaskInstance(runtimeContext, startEventElement, processInstance);
-        // put into completed cache,we will persist them when all the tasks done
-        runtimeContext.getCompletedTasks().add(startEventTask);
+        startEventTask.setExecutionId(execution.getExecutionId());
+        // put into tasks cache, persist when all the tasks done
+        runtimeContext.getTasks().add(startEventTask);
+        runtimeContext.getExecutions().add(execution);
 
         // as pre
         runtimeContext.setPreElement(startEventElement);
@@ -36,9 +41,9 @@ public class StartEventExecutor extends AbstractActivityExecutor {
         return false;
     }
 
-    private static TaskInstance buildTaskInstance(RuntimeContext runtimeContext,
-                                                  BaseElement startEventElement,
-                                                  ProcessInstance processInstance) {
+    private TaskInstance buildTaskInstance(RuntimeContext runtimeContext,
+                                           BaseElement startEventElement,
+                                           ProcessInstance processInstance) {
         TaskInstance startEventTask = new TaskInstance();
         startEventTask.setTaskId(runtimeContext.getProcessEngineConfiguration().getIdGenerator().nextId());
         startEventTask.setStartTime(processInstance.getStartTime());

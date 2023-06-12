@@ -1,0 +1,57 @@
+[
+  {
+    "key": "START_EVENT1",
+    "name": "开始",
+    "type": "START_EVENT",
+    "outgoing": [
+      "SEQUENCE_FLOW1"
+    ],
+    "incoming": []
+  },
+  {
+    "key": "SEQUENCE_FLOW1",
+    "name": "",
+    "type": "SEQUENCE_FLOW",
+    "outgoing": [
+      "USER_TASK1"
+    ],
+    "incoming": [
+      "START_EVENT1"
+    ]
+  },
+  {
+    "key": "USER_TASK1",
+    "name": "用户节点1",
+    "type": "USER_TASK",
+    "outgoing": [
+      "SEQUENCE_FLOW2"
+    ],
+    "incoming": [
+      "SEQUENCE_FLOW1"
+    ],
+    "TaskAssigneeExtensionElement": {
+      "assignee": "user1",
+      "assigneeType": "user"
+    }
+  },
+  {
+    "key": "SEQUENCE_FLOW2",
+    "name": "",
+    "type": "SEQUENCE_FLOW",
+    "outgoing": [
+      "END_EVENT1"
+    ],
+    "incoming": [
+      "USER_TASK1"
+    ]
+  },
+  {
+    "key": "END_EVENT1",
+    "name": "结束节点",
+    "type": "END_EVENT",
+    "outgoing": [],
+    "incoming": [
+      "USER_TASK1"
+    ]
+  }
+]

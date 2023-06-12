@@ -11,23 +11,21 @@ import com.repins.infinite.engine.state.TaskInstanceState;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultSequenceFlowExecutor extends AbstractSequenceFlowExecutor {
 
     @Override
-    public List<TaskInstance> findAtLeastOneOrElseThrow(List<BaseElement> sequenceFlows, RuntimeContext runtimeContext) {
-        LocalDateTime now = LocalDateTime.now();
-        List<TaskInstance> taskInstances = new ArrayList<>(sequenceFlows.size());
-        sequenceFlows.forEach(sf -> {
-            SequenceFlow sequenceFlow = (SequenceFlow) sf;
-            if (calculateExpression(sequenceFlow.getExpression(), runtimeContext)) {
-                taskInstances.add(buildTaskInstance(sequenceFlow,runtimeContext,now));
-            }
-        });
-        if (taskInstances.isEmpty()){
+    public List<SequenceFlow> findAtLeastOneOrElseThrow(List<BaseElement> sequenceFlows, RuntimeContext runtimeContext) {
+        List<SequenceFlow> flows = sequenceFlows
+                .stream()
+                .map(e -> (SequenceFlow)e)
+                .filter(e -> calculateExpression(e.getExpression(),runtimeContext))
+                .collect(Collectors.toList());
+        if (flows.isEmpty()){
             throw new InfiniteEngineException("non executable sequenceFLow");
         }
-        return taskInstances;
+        return flows;
     }
 
     protected boolean calculateExpression(String expression, RuntimeContext runtimeContext) {
@@ -35,17 +33,4 @@ public class DefaultSequenceFlowExecutor extends AbstractSequenceFlowExecutor {
         return true;
     }
 
-    private TaskInstance buildTaskInstance(SequenceFlow sequenceFlow,RuntimeContext runtimeContext,LocalDateTime now){
-        TaskInstance taskInstance = new TaskInstance();
-        taskInstance.setElementName(sequenceFlow.getName());
-        taskInstance.setElementKey(sequenceFlow.getKey());
-        taskInstance.setElementType(sequenceFlow.getType());
-        taskInstance.setTaskId(runtimeContext.getProcessEngineConfiguration().getIdGenerator().nextId());
-        taskInstance.setProcessInstanceId(runtimeContext.getProcessInstance().getProcessInstanceId());
-        taskInstance.setInstanceState(TaskInstanceState.COMPLETE.getState());
-        taskInstance.setSourceTaskInstanceId(runtimeContext.getPreTaskInstance().getTaskId());
-        taskInstance.setStartTime(now);
-        taskInstance.setEndTime(LocalDateTime.now());
-        return taskInstance;
-    }
 }

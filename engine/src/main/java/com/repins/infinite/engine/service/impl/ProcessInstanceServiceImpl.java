@@ -75,7 +75,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     @Override
     public void setProcessEngineConfiguration(ProcessEngineConfiguration processEngineConfiguration) {
         this.processEngineConfiguration = processEngineConfiguration;
-        this.deploymentService = processEngineConfiguration.getProcessEngine().getDeploymentService();
+        this.deploymentService = processEngineConfiguration.getProcessEngineServiceFinder().findDeploymentService();
         this.globalContext = processEngineConfiguration.getGlobalContext();
     }
 

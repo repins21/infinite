@@ -1,6 +1,8 @@
 package com.repins.infinite.engine.configuration;
 
 import com.repins.infinite.engine.ProcessEngine;
+import com.repins.infinite.engine.behavior.TaskAssigneeBehavior;
+import com.repins.infinite.engine.behavior.TaskBehaviorFactory;
 import com.repins.infinite.engine.cache.local.LocalDeploymentRuntimeCacheStrategy;
 import com.repins.infinite.engine.context.GlobalContext;
 import com.repins.infinite.engine.db.DatabaseType;
@@ -30,6 +32,7 @@ public class DefaultProcessEngineConfiguration implements ProcessEngineConfigura
     private ProcessEngine processEngine;
     private GlobalContext globalContext;
     private AbstractActivityExecutorFactory activityFactory;
+    private TaskAssigneeBehavior taskAssigneeBehavior;
 
 
     public DefaultProcessEngineConfiguration() {
@@ -46,6 +49,7 @@ public class DefaultProcessEngineConfiguration implements ProcessEngineConfigura
         processEngineConfiguration.setIdGenerator(new DefaultUuidGenerator());
         processEngineConfiguration.setGlobalContext(new GlobalContext(new LocalDeploymentRuntimeCacheStrategy()));
         processEngineConfiguration.setAbstractActivityFactory(new DefaultActivityExecutorFactory());
+        processEngineConfiguration.setTaskAssigneeBehavior(new TaskBehaviorFactory().getTaskAssigneeBehavior());
         return processEngineConfiguration;
     }
 
@@ -145,6 +149,16 @@ public class DefaultProcessEngineConfiguration implements ProcessEngineConfigura
     @Override
     public void setAbstractActivityFactory(AbstractActivityExecutorFactory abstractActivityFactory) {
         this.activityFactory = abstractActivityFactory;
+    }
+
+    @Override
+    public TaskAssigneeBehavior getTaskAssigneeBehavior() {
+        return this.taskAssigneeBehavior;
+    }
+
+    @Override
+    public void setTaskAssigneeBehavior(TaskAssigneeBehavior taskAssigneeBehavior) {
+        this.taskAssigneeBehavior = taskAssigneeBehavior;
     }
 
     @Override

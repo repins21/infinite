@@ -6,12 +6,15 @@
     <sql id="baseColumns">
         `id`,
         `task_id`,
+        `execution_id`,
         `process_instance_id`,
         `element_name`,
         `element_key`,
         `element_type`,
         `source_task_instance_id`,
+        `owner`,
         `assignee`,
+        `assignee_type`,
         `instance_state`,
         `start_time`,
         `end_time`
@@ -20,8 +23,8 @@
         insert into inf_ru_task_instance (<include refid="baseColumns"></include>)
             values
             <foreach collection="taskInstances" item="item" index="index" separator="," >
-                (#{item.id},#{item.taskId},#{item.processInstanceId},#{item.elementName},#{item.elementKey},#{item.elementType},
-                 #{item.sourceTaskInstanceId},#{item.assignee},#{item.instanceState},#{item.startTime},#{item.endTime})
+                (#{item.id},#{item.taskId},#{item.executionId},#{item.processInstanceId},#{item.elementName},#{item.elementKey},#{item.elementType},
+                 #{item.sourceTaskInstanceId},#{item.owner},#{item.assignee},#{item.assigneeType},#{item.instanceState},#{item.startTime},#{item.endTime})
             </foreach>
     </insert>
 

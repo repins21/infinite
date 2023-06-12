@@ -8,6 +8,8 @@ public class TaskInstance {
 
     private String taskId;
 
+    private String executionId;
+
     private String processInstanceId;
 
     private String elementName;
@@ -20,12 +22,41 @@ public class TaskInstance {
 
     private String assignee;
 
+    private String assigneeType;
+
+    private String owner;
+
+
     private Integer instanceState;
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
+
+    public String getAssigneeType() {
+        return assigneeType;
+    }
+
+    public void setAssigneeType(String assigneeType) {
+        this.assigneeType = assigneeType;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public String getExecutionId() {
+        return executionId;
+    }
+
+    public void setExecutionId(String executionId) {
+        this.executionId = executionId;
+    }
 
     public String getProcessInstanceId() {
         return processInstanceId;

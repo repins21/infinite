@@ -5,6 +5,7 @@ import com.repins.infinite.engine.db.repository.ProcessRepository;
 import com.repins.infinite.engine.element.base.BaseElement;
 import com.repins.infinite.engine.element.event.StartEvent;
 import com.repins.infinite.engine.executor.factory.AbstractActivityExecutorFactory;
+import com.repins.infinite.engine.model.Execution;
 import com.repins.infinite.engine.model.ProcessInstance;
 import com.repins.infinite.engine.model.TaskInstance;
 
@@ -23,7 +24,9 @@ public class RuntimeContext {
 
     private GlobalContext globalContext;
 
-    private List<TaskInstance> completedTasks;
+    private List<TaskInstance> tasks;
+
+    private List<Execution> executions;
 
     private BaseElement preElement;
 
@@ -34,6 +37,18 @@ public class RuntimeContext {
     private TaskInstance preTaskInstance;
 
     private ProcessEngineConfiguration processEngineConfiguration;
+
+
+    public List<Execution> getExecutions() {
+        if (executions == null){
+            executions = new ArrayList<>();
+        }
+        return executions;
+    }
+
+    public void setExecutions(List<Execution> executions) {
+        this.executions = executions;
+    }
 
     public TaskInstance getPreTaskInstance() {
         return preTaskInstance;
@@ -75,15 +90,15 @@ public class RuntimeContext {
         this.preElement = preElement;
     }
 
-    public List<TaskInstance> getCompletedTasks() {
-        if (completedTasks == null){
-            completedTasks =  new ArrayList<>();
+    public List<TaskInstance> getTasks() {
+        if (tasks == null){
+            tasks =  new ArrayList<>();
         }
-        return completedTasks;
+        return tasks;
     }
 
-    public void setCompletedTasks(List<TaskInstance> completedTasks) {
-        this.completedTasks = completedTasks;
+    public void setTasks(List<TaskInstance> tasks) {
+        this.tasks = tasks;
     }
 
     public GlobalContext getGlobalContext() {
