@@ -45,16 +45,12 @@ public abstract class AbstractActivityExecutor {
 
         sequenceFlows.forEach(sequenceFlow -> {
             Execution execution = buildExecution(runtimeContext, sequenceFlow, runtimeContext.getProcessInstance());
-            TaskInstance taskInstance = buildSequenceFlowTaskInstance(sequenceFlow, runtimeContext);
-            taskInstance.setExecutionId(execution.getExecutionId());
-            runtimeContext.getTasks().add(taskInstance);
             runtimeContext.getExecutions().add(execution);
             // execute next tasks in the loop
             // todo async support
             // getOutgoing().get(0) sequenceFlow must have only one outgoing
             BaseElement element = elementsCache.get(elementsCache.get(sequenceFlow.getKey()).getOutgoing().get(0));
             runtimeContext.setPreElement(element);
-            runtimeContext.setPreTaskInstance(taskInstance);
             runtimeContext.setCurElement(element);
             runtimeContext.getActivityExecutorFactory().getExecutor(element.getClass()).execute(runtimeContext);
         });

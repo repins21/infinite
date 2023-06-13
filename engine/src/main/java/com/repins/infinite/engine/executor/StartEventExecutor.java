@@ -27,7 +27,6 @@ public class StartEventExecutor extends AbstractActivityExecutor {
         TaskInstance startEventTask = buildTaskInstance(runtimeContext, startEventElement, processInstance);
         startEventTask.setExecutionId(execution.getExecutionId());
         // put into tasks cache, persist when all the tasks done
-        runtimeContext.getTasks().add(startEventTask);
         runtimeContext.getExecutions().add(execution);
 
         // as pre
