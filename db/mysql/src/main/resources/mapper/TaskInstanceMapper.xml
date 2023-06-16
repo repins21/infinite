@@ -8,6 +8,7 @@
         `task_id`,
         `execution_id`,
         `process_instance_id`,
+        `deployment_version_id`,
         `element_name`,
         `element_key`,
         `element_type`,
@@ -23,9 +24,34 @@
         insert into inf_ru_task_instance (<include refid="baseColumns"></include>)
             values
             <foreach collection="taskInstances" item="item" index="index" separator="," >
-                (#{item.id},#{item.taskId},#{item.executionId},#{item.processInstanceId},#{item.elementName},#{item.elementKey},#{item.elementType},
+                (#{item.id},#{item.taskId},#{item.executionId},#{item.processInstanceId},#{item.deploymentVersionId},#{item.elementName},#{item.elementKey},#{item.elementType},
                  #{item.sourceTaskInstanceId},#{item.owner},#{item.assignee},#{item.assigneeType},#{item.instanceState},#{item.startTime},#{item.endTime})
             </foreach>
     </insert>
+
+    <update id="updateById" parameterType="com.repins.infinite.engine.model.TaskInstance">
+        update inf_ru_task_instance
+        <set>
+            <if test="instanceState != null">
+                instance_state = #{instanceState},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+        </set>
+        where task_id = #{taskId}
+    </update>
+
+
+    <select id="selectByTaskIdAndProcessInstanceId" resultType="com.repins.infinite.engine.model.TaskInstance">
+        select
+            <include refid="baseColumns"></include>
+        from inf_ru_task_instance
+        where
+            task_id = #{taskId}
+        <if test="processInstanceId != null and processInstanceId != ''">
+            and process_instance_id = #{processInstanceId}
+        </if>
+    </select>
 
 </mapper>

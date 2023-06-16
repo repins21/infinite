@@ -3,6 +3,7 @@ package com.repins.db.mysql;
 import com.repins.infinite.db.mysql.MybatisProcessRepositoryFinder;
 import com.repins.infinite.engine.InfiniteProcessEngine;
 import com.repins.infinite.engine.ProcessEngine;
+import com.repins.infinite.engine.command.CompleteTaskCmd;
 import com.repins.infinite.engine.command.CreateDeploymentCmd;
 import com.repins.infinite.engine.command.DeployDeploymentCmd;
 import com.repins.infinite.engine.command.StartProcessInstanceCmd;
@@ -26,33 +27,56 @@ public class CommonTest {
             "    \"key\": \"START_EVENT1\",\n" +
             "    \"name\": \"开始\",\n" +
             "    \"type\": \"START_EVENT\",\n" +
-            "    \"outgoing\": [\"SEQUENCE_FLOW1\"],\n" +
+            "    \"outgoing\": [\n" +
+            "      \"SEQUENCE_FLOW1\"\n" +
+            "    ],\n" +
             "    \"incoming\": []\n" +
             "  },\n" +
             "  {\n" +
             "    \"key\": \"SEQUENCE_FLOW1\",\n" +
             "    \"name\": \"\",\n" +
             "    \"type\": \"SEQUENCE_FLOW\",\n" +
-            "    \"outgoing\": [\"USER_TASK1\"],\n" +
-            "    \"incoming\": [\"START_EVENT1\"]\n" +
+            "    \"outgoing\": [\n" +
+            "      \"USER_TASK1\"\n" +
+            "    ],\n" +
+            "    \"incoming\": [\n" +
+            "      \"START_EVENT1\"\n" +
+            "    ]\n" +
             "  },\n" +
             "  {\n" +
             "    \"key\": \"USER_TASK1\",\n" +
-            "    \"name\": \"\",\n" +
+            "    \"name\": \"用户节点1\",\n" +
             "    \"type\": \"USER_TASK\",\n" +
-            "    \"outgoing\": [\"SEQUENCE_FLOW2\"],\n" +
-            "    \"incoming\": [\"SEQUENCE_FLOW1\"],\n" +
+            "    \"outgoing\": [\n" +
+            "      \"SEQUENCE_FLOW2\"\n" +
+            "    ],\n" +
+            "    \"incoming\": [\n" +
+            "      \"SEQUENCE_FLOW1\"\n" +
+            "    ],\n" +
             "    \"taskAssigneeExtensionElement\": {\n" +
             "      \"assignee\": \"user1\",\n" +
             "      \"assigneeType\": \"user\"\n" +
             "    }\n" +
             "  },\n" +
             "  {\n" +
+            "    \"key\": \"SEQUENCE_FLOW2\",\n" +
+            "    \"name\": \"\",\n" +
+            "    \"type\": \"SEQUENCE_FLOW\",\n" +
+            "    \"outgoing\": [\n" +
+            "      \"END_EVENT1\"\n" +
+            "    ],\n" +
+            "    \"incoming\": [\n" +
+            "      \"USER_TASK1\"\n" +
+            "    ]\n" +
+            "  },\n" +
+            "  {\n" +
             "    \"key\": \"END_EVENT1\",\n" +
             "    \"name\": \"结束节点\",\n" +
             "    \"type\": \"END_EVENT\",\n" +
             "    \"outgoing\": [],\n" +
-            "    \"incoming\": [\"USER_TASK1\"]\n" +
+            "    \"incoming\": [\n" +
+            "      \"USER_TASK1\"\n" +
+            "    ]\n" +
             "  }\n" +
             "]";
 
@@ -94,8 +118,18 @@ public class CommonTest {
         StartProcessInstanceCmd cmd = new StartProcessInstanceCmd();
         cmd.setStartBy("user_start");
         cmd.setProcessName("测试流程111");
-        cmd.setDeploymentId("f29c0885-1d20-40fc-b8f3-ee3a364356b0");
+        cmd.setDeploymentId("7729b039-d4f6-42de-a821-045aa62b44cc");
         processEngine.getProcessInstanceService().startProcessInstance(cmd);
     }
 
+    @Test
+    public void completeTask(){
+        CompleteTaskCmd cmd = new CompleteTaskCmd();
+        cmd.setAssignee("user1");
+        cmd.setTaskId("b3a7ba6c-8b8c-4c5c-a4a3-3877f0d019c2");
+        cmd.setAssigneeType("user");
+        cmd.setStopProcess(false);
+        cmd.setComment("暂时没有");
+        processEngine.getTaskInstanceService().complete(cmd);
+    }
 }

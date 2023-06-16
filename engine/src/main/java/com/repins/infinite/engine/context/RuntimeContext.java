@@ -1,7 +1,6 @@
 package com.repins.infinite.engine.context;
 
 import com.repins.infinite.engine.configuration.ProcessEngineConfiguration;
-import com.repins.infinite.engine.db.repository.ProcessRepository;
 import com.repins.infinite.engine.element.base.BaseElement;
 import com.repins.infinite.engine.element.event.StartEvent;
 import com.repins.infinite.engine.executor.factory.AbstractActivityExecutorFactory;
@@ -20,13 +19,15 @@ public class RuntimeContext {
 
     private AbstractActivityExecutorFactory activityExecutorFactory;
 
-    private ProcessRepository processInstanceRepository;
-
     private GlobalContext globalContext;
 
-    private List<TaskInstance> tasks;
+    private List<TaskInstance> persistentTasks;
 
-    private List<Execution> executions;
+    private List<TaskInstance> updateTasks;
+
+    private List<Execution> persistentExecutions;
+
+    private List<Execution> updateExecutions;
 
     private BaseElement preElement;
 
@@ -36,18 +37,50 @@ public class RuntimeContext {
 
     private TaskInstance preTaskInstance;
 
+    private ProcessInstance completedProcessInstance;
+
     private ProcessEngineConfiguration processEngineConfiguration;
 
 
-    public List<Execution> getExecutions() {
-        if (executions == null){
-            executions = new ArrayList<>();
-        }
-        return executions;
+    public ProcessInstance getCompletedProcessInstance() {
+        return completedProcessInstance;
     }
 
-    public void setExecutions(List<Execution> executions) {
-        this.executions = executions;
+    public void setCompletedProcessInstance(ProcessInstance completedProcessInstance) {
+        this.completedProcessInstance = completedProcessInstance;
+    }
+
+    public List<Execution> getUpdateExecutions() {
+        if (this.updateExecutions == null){
+            this.updateExecutions = new ArrayList<>();
+        }
+        return this.updateExecutions;
+    }
+
+    public void setUpdateExecutions(List<Execution> updateExecutions) {
+        this.updateExecutions = updateExecutions;
+    }
+
+    public List<TaskInstance> getUpdateTasks() {
+        if (this.updateTasks == null){
+            this.updateTasks = new ArrayList<>();
+        }
+        return this.updateTasks;
+    }
+
+    public void setUpdateTasks(List<TaskInstance> updateTasks) {
+        this.updateTasks = updateTasks;
+    }
+
+    public List<Execution> getPersistentExecutions() {
+        if (persistentExecutions == null){
+            persistentExecutions = new ArrayList<>();
+        }
+        return persistentExecutions;
+    }
+
+    public void setPersistentExecutions(List<Execution> persistentExecutions) {
+        this.persistentExecutions = persistentExecutions;
     }
 
     public TaskInstance getPreTaskInstance() {
@@ -90,15 +123,15 @@ public class RuntimeContext {
         this.preElement = preElement;
     }
 
-    public List<TaskInstance> getTasks() {
-        if (tasks == null){
-            tasks =  new ArrayList<>();
+    public List<TaskInstance> getPersistentTasks() {
+        if (persistentTasks == null){
+            persistentTasks =  new ArrayList<>();
         }
-        return tasks;
+        return persistentTasks;
     }
 
-    public void setTasks(List<TaskInstance> tasks) {
-        this.tasks = tasks;
+    public void setPersistentTasks(List<TaskInstance> persistentTasks) {
+        this.persistentTasks = persistentTasks;
     }
 
     public GlobalContext getGlobalContext() {
@@ -107,14 +140,6 @@ public class RuntimeContext {
 
     public void setGlobalContext(GlobalContext globalContext) {
         this.globalContext = globalContext;
-    }
-
-    public ProcessRepository getProcessInstanceRepository() {
-        return processInstanceRepository;
-    }
-
-    public void setProcessInstanceRepository(ProcessRepository processInstanceRepository) {
-        this.processInstanceRepository = processInstanceRepository;
     }
 
     public StartEvent getStartEvent() {

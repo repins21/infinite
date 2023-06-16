@@ -4,4 +4,6 @@ import com.repins.infinite.engine.model.ProcessInstance;
 
 public interface ProcessInstanceRepository extends ProcessRepository {
     void insertProcessInstance(ProcessInstance processInstance);
+
+    void updateProcessInstance(ProcessInstance completedProcessInstance);
 }

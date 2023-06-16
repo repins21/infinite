@@ -10,6 +10,8 @@ public class TaskInstance {
 
     private String executionId;
 
+    private String deploymentVersionId;
+
     private String processInstanceId;
 
     private String elementName;
@@ -33,6 +35,13 @@ public class TaskInstance {
 
     private LocalDateTime endTime;
 
+    public String getDeploymentVersionId() {
+        return deploymentVersionId;
+    }
+
+    public void setDeploymentVersionId(String deploymentVersionId) {
+        this.deploymentVersionId = deploymentVersionId;
+    }
 
     public String getAssigneeType() {
         return assigneeType;

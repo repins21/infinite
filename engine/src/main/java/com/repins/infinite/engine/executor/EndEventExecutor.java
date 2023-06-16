@@ -1,8 +1,12 @@
 package com.repins.infinite.engine.executor;
 
 import com.repins.infinite.engine.context.RuntimeContext;
+import com.repins.infinite.engine.model.ProcessInstance;
+import com.repins.infinite.engine.state.ProcessInstanceState;
 
-public class EndEventExecutor extends AbstractActivityExecutor{
+import java.time.LocalDateTime;
+
+public class EndEventExecutor extends AbstractActivityExecutor {
 
     @Override
     protected void active(RuntimeContext runtimeContext) {
@@ -10,12 +14,20 @@ public class EndEventExecutor extends AbstractActivityExecutor{
     }
 
     @Override
-    protected void complete(RuntimeContext runtimeContext) {
-
+    protected boolean complete(RuntimeContext runtimeContext) {
+        return true;
     }
 
     @Override
     protected boolean pause(RuntimeContext runtimeContext) {
-        return true;
+        return false;
+    }
+
+    @Override
+    protected void leave(RuntimeContext runtimeContext, boolean completed) {
+        ProcessInstance processInstance = runtimeContext.getProcessInstance();
+        processInstance.setProcessState(ProcessInstanceState.END.getState());
+        processInstance.setEndTime(LocalDateTime.now());
+        runtimeContext.setCompletedProcessInstance(processInstance);
     }
 }

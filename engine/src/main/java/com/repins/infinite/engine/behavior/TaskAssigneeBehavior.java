@@ -9,4 +9,6 @@ import java.util.List;
 public interface TaskAssigneeBehavior {
 
     List<TaskAssignee> findTaskAssignees(RuntimeContext context);
+
+    boolean completed(RuntimeContext context);
 }

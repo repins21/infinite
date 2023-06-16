@@ -7,4 +7,6 @@ import java.util.List;
 public interface ExecutionRepository extends ProcessRepository {
 
     void insertBatchExecution(List<Execution> executions);
+
+    void updateBatchExecutions(List<Execution> updateExecutions);
 }

@@ -34,12 +34,13 @@ CREATE TABLE `inf_ru_process_instance` (
                                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-
+DROP TABLE IF EXISTS `inf_ru_task_instance`;
 CREATE TABLE `inf_ru_task_instance` (
                                         `id` int(11) NOT NULL AUTO_INCREMENT,
                                         `task_id` varchar(64) DEFAULT NULL,
                                         `execution_id` varchar(64) DEFAULT NULL,
                                         `process_instance_id` varchar(64) DEFAULT NULL,
+                                        `deployment_version_id` varchar(64) DEFAULT NULL,
                                         `element_type` varchar(16) DEFAULT NULL,
                                         `element_key` varchar(64) DEFAULT NULL,
                                         `element_name` varchar(64) DEFAULT NULL,
@@ -51,7 +52,7 @@ CREATE TABLE `inf_ru_task_instance` (
                                         `start_time` datetime DEFAULT NULL,
                                         `end_time` datetime DEFAULT NULL,
                                         PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `inf_ru_execution`;
 CREATE TABLE `inf_ru_execution` (

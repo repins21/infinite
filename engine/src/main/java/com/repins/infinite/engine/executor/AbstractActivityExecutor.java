@@ -19,20 +19,28 @@ public abstract class AbstractActivityExecutor {
     protected abstract void active(RuntimeContext runtimeContext);
 
     //todo  distribute lock
-    public void execute(RuntimeContext runtimeContext) {
-        active(runtimeContext);
-        if (pause(runtimeContext)) {
-            return;
+    public void execute(RuntimeContext runtimeContext,boolean activeAtFirst) {
+        if (activeAtFirst){
+            active(runtimeContext);
+            if (pause(runtimeContext)) {
+                return;
+            }
         }
-        complete(runtimeContext);
-        leave(runtimeContext);
+
+        boolean completed = complete(runtimeContext);
+
+        leave(runtimeContext, completed);
     }
 
-    protected abstract void complete(RuntimeContext runtimeContext);
+    protected abstract boolean complete(RuntimeContext runtimeContext);
 
     protected abstract boolean pause(RuntimeContext runtimeContext);
 
-    protected void leave(RuntimeContext runtimeContext) {
+    protected void leave(RuntimeContext runtimeContext, boolean completed) {
+        if (!completed) {
+            return;
+        }
+
         BaseElement currentElement = runtimeContext.getCurElement();
         Map<String, BaseElement> elementsCache = getProcessElementsCache(runtimeContext);
         List<BaseElement> sequenceFlowElements = getNextSequenceFlowElements(currentElement, elementsCache);
@@ -45,14 +53,14 @@ public abstract class AbstractActivityExecutor {
 
         sequenceFlows.forEach(sequenceFlow -> {
             Execution execution = buildExecution(runtimeContext, sequenceFlow, runtimeContext.getProcessInstance());
-            runtimeContext.getExecutions().add(execution);
+            runtimeContext.getPersistentExecutions().add(execution);
             // execute next tasks in the loop
             // todo async support
             // getOutgoing().get(0) sequenceFlow must have only one outgoing
             BaseElement element = elementsCache.get(elementsCache.get(sequenceFlow.getKey()).getOutgoing().get(0));
             runtimeContext.setPreElement(element);
             runtimeContext.setCurElement(element);
-            runtimeContext.getActivityExecutorFactory().getExecutor(element.getClass()).execute(runtimeContext);
+            runtimeContext.getActivityExecutorFactory().getExecutor(element.getClass()).execute(runtimeContext,true);
         });
     }
 
@@ -81,6 +89,7 @@ public abstract class AbstractActivityExecutor {
         taskInstance.setSourceTaskInstanceId(runtimeContext.getPreTaskInstance().getTaskId());
         taskInstance.setStartTime(runtimeContext.getPreTaskInstance().getEndTime());
         taskInstance.setEndTime(LocalDateTime.now());
+        taskInstance.setDeploymentVersionId(runtimeContext.getProcessInstance().getDeploymentVersionId());
         return taskInstance;
     }
 

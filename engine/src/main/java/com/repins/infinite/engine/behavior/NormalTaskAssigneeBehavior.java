@@ -15,4 +15,11 @@ public class NormalTaskAssigneeBehavior implements TaskAssigneeBehavior {
         TaskAssigneeExtensionElement ext = userTask.getTaskAssigneeExtensionElement();
         return Collections.singletonList(new TaskAssignee(ext.getAssignee(), ext.getAssigneeType()));
     }
+
+    @Override
+    public boolean completed(RuntimeContext context) {
+        return true;
+    }
+
+
 }

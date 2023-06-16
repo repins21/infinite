@@ -8,4 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ProcessInstanceMapper extends ProcessInstanceRepository {
     void insertProcessInstance(ProcessInstance processInstance);
 
+
+     void updateProcessInstance(ProcessInstance completedProcessInstance);
+
 }

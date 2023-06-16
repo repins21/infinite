@@ -18,5 +18,14 @@
                 (#{item.id},#{item.elementKey},#{item.executionId},#{item.processInstanceId},#{item.deploymentVersionId},#{item.state})
             </foreach>
     </insert>
+    <update id="updateById" parameterType="com.repins.infinite.engine.model.Execution">
+        update inf_ru_execution
+        <set>
+            <if test="state != null">
+                state = #{state},
+            </if>
+        </set>
+        where execution_id = #{executionId}
+    </update>
 
 </mapper>

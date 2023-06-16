@@ -3,9 +3,7 @@ package com.repins.infinite.engine.executor.process;
 import com.repins.infinite.engine.context.RuntimeContext;
 import com.repins.infinite.engine.db.repository.ExecutionRepository;
 import com.repins.infinite.engine.db.repository.ProcessInstanceRepository;
-import com.repins.infinite.engine.db.repository.ProcessRepository;
 import com.repins.infinite.engine.db.repository.TaskInstanceRepository;
-import com.repins.infinite.engine.element.base.BaseElement;
 import com.repins.infinite.engine.loader.ProcessEngineRepositoryFinder;
 import com.repins.infinite.engine.state.ProcessInstanceState;
 
@@ -19,31 +17,47 @@ public class DefaultProcessInstanceExecutor extends AbstractProcessInstanceExecu
     }
 
     @Override
-    protected void execute(RuntimeContext runtimeContext, BaseElement element) {
-        runtimeContext.getProcessInstance().setProcessState(ProcessInstanceState.RUNNING.getState());
-        runtimeContext.getProcessInstance().setStartTime(LocalDateTime.now());
-        runtimeContext.setCurElement(element);
-        runtimeContext.getActivityExecutorFactory().getExecutor(element.getClass()).execute(runtimeContext);
+    protected void execute(RuntimeContext runtimeContext,boolean activeAtFirst) {
+        runtimeContext
+                .getActivityExecutorFactory()
+                .getExecutor(runtimeContext.getCurElement().getClass())
+                .execute(runtimeContext,activeAtFirst);
     }
+
 
     @Override
     protected void persistent(RuntimeContext runtimeContext) {
         ProcessEngineRepositoryFinder repositoryFinder =
                 runtimeContext.getProcessEngineConfiguration().getProcessEngineRepositoryFinder();
+
         // persistent processInstance
         ProcessInstanceRepository processInstanceRepository =
                 (ProcessInstanceRepository) repositoryFinder.findRepository(ProcessInstanceRepository.class);
-        processInstanceRepository.insertProcessInstance(runtimeContext.getProcessInstance());
+
+        // todo history
+        if (runtimeContext.getCompletedProcessInstance() != null){
+            processInstanceRepository.updateProcessInstance(runtimeContext.getCompletedProcessInstance());
+        }else {
+            processInstanceRepository.insertProcessInstance(runtimeContext.getProcessInstance());
+        }
 
         // persistent taskInstances
         TaskInstanceRepository taskInstanceRepository =
                 (TaskInstanceRepository) repositoryFinder.findRepository(TaskInstanceRepository.class);
-        taskInstanceRepository.insertBatchTaskInstances(runtimeContext.getTasks());
+        if (!runtimeContext.getPersistentTasks().isEmpty()){
+            taskInstanceRepository.insertBatchTaskInstances(runtimeContext.getPersistentTasks());
+        }
+        // update completed tasks state
+        // todo move completed taskInstance into history and delete
+        taskInstanceRepository.updateBatchTaskInstances(runtimeContext.getUpdateTasks());
 
         // persistent executions
+        // todo move completed Executions into history and delete
         ExecutionRepository executionRepository =
                 (ExecutionRepository) repositoryFinder.findRepository(ExecutionRepository.class);
-        executionRepository.insertBatchExecution(runtimeContext.getExecutions());
-
+        if (!runtimeContext.getPersistentExecutions().isEmpty()){
+            executionRepository.insertBatchExecution(runtimeContext.getPersistentExecutions());
+        }
+        executionRepository.updateBatchExecutions(runtimeContext.getUpdateExecutions());
     }
 }

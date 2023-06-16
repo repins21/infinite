@@ -57,6 +57,7 @@ public interface ProcessEngineConfiguration {
 
     void setAbstractActivityFactory(AbstractActivityExecutorFactory abstractActivityFactory);
 
+    //todo tasks could have different behavior
     TaskAssigneeBehavior getTaskAssigneeBehavior();
 
     void setTaskAssigneeBehavior(TaskAssigneeBehavior taskAssigneeBehavior);
