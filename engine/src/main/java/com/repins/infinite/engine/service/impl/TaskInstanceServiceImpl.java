@@ -3,14 +3,17 @@ package com.repins.infinite.engine.service.impl;
 import com.repins.infinite.engine.command.CompleteTaskCmd;
 import com.repins.infinite.engine.configuration.ProcessEngineConfiguration;
 import com.repins.infinite.engine.context.RuntimeContext;
+import com.repins.infinite.engine.db.repository.ProcessInstanceRepository;
 import com.repins.infinite.engine.db.repository.ProcessRepository;
 import com.repins.infinite.engine.db.repository.TaskInstanceRepository;
 import com.repins.infinite.engine.element.base.BaseElement;
+import com.repins.infinite.engine.exception.InfiniteEngineException;
 import com.repins.infinite.engine.exception.InfiniteIllegalAssigneeException;
 import com.repins.infinite.engine.loader.InfiniteService;
 import com.repins.infinite.engine.model.ProcessInstance;
 import com.repins.infinite.engine.model.TaskInstance;
 import com.repins.infinite.engine.service.TaskInstanceService;
+import com.repins.infinite.engine.state.ProcessInstanceState;
 import com.repins.infinite.engine.state.TaskInstanceState;
 
 import java.time.LocalDateTime;
@@ -84,9 +87,14 @@ public class TaskInstanceServiceImpl implements TaskInstanceService {
         runtimeContext.setCurTaskInstance(taskInstance);
         runtimeContext.getUpdateTasks().add(taskInstance);
 
-        ProcessInstance processInstance = new ProcessInstance();
-        processInstance.setDeploymentVersionId(taskInstance.getDeploymentVersionId());
-        processInstance.setProcessInstanceId(taskInstance.getProcessInstanceId());
+        ProcessInstanceRepository processInstanceRepository =
+                (ProcessInstanceRepository) this.processEngineConfiguration.getProcessEngineRepositoryFinder()
+                        .findRepository(ProcessInstanceRepository.class);
+        ProcessInstance processInstance =
+                processInstanceRepository.selectByProcessInstanceIdAndState(taskInstance.getProcessInstanceId(), ProcessInstanceState.RUNNING.getState());
+        if (processInstance == null){
+            throw new InfiniteEngineException(String.format("processInstance not found or not running,processInstanceId:%s",taskInstance.getProcessInstanceId()));
+        }
         runtimeContext.setProcessInstance(processInstance);
 
         runtimeContext.setProcessEngineConfiguration(this.processEngineConfiguration);

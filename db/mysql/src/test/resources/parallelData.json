@@ -4,7 +4,8 @@
     "name": "开始",
     "type": "START_EVENT",
     "outgoing": [
-      "SEQUENCE_FLOW1"
+      "SEQUENCE_FLOW1",
+      "SEQUENCE_FLOW3"
     ],
     "incoming": []
   },
@@ -29,7 +30,7 @@
     "incoming": [
       "SEQUENCE_FLOW1"
     ],
-    "TaskAssigneeExtensionElement": {
+    "taskAssigneeExtensionElement": {
       "assignee": "user1",
       "assigneeType": "user"
     }
@@ -46,12 +47,50 @@
     ]
   },
   {
+    "key": "SEQUENCE_FLOW3",
+    "name": "",
+    "type": "SEQUENCE_FLOW",
+    "outgoing": [
+      "USER_TASK2"
+    ],
+    "incoming": [
+      "START_EVENT1"
+    ]
+  },
+  {
+    "key": "USER_TASK2",
+    "name": "用户节点2",
+    "type": "USER_TASK",
+    "outgoing": [
+      "SEQUENCE_FLOW4"
+    ],
+    "incoming": [
+      "SEQUENCE_FLOW3"
+    ],
+    "taskAssigneeExtensionElement": {
+      "assignee": "user2",
+      "assigneeType": "user"
+    }
+  },
+  {
+    "key": "SEQUENCE_FLOW4",
+    "name": "",
+    "type": "SEQUENCE_FLOW",
+    "outgoing": [
+      "END_EVENT1"
+    ],
+    "incoming": [
+      "USER_TASK2"
+    ]
+  },
+  {
     "key": "END_EVENT1",
     "name": "结束节点",
     "type": "END_EVENT",
     "outgoing": [],
     "incoming": [
-      "USER_TASK1"
+      "SEQUENCE_FLOW2",
+      "SEQUENCE_FLOW4"
     ]
   }
 ]

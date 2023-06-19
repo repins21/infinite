@@ -21,5 +21,10 @@ public class NormalTaskAssigneeBehavior implements TaskAssigneeBehavior {
         return true;
     }
 
+    @Override
+    public void beforeComplete(List<TaskAssignee> taskAssignees, RuntimeContext context) {
+
+    }
+
 
 }

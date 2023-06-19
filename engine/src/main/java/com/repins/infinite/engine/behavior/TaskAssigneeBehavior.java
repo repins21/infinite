@@ -11,4 +11,6 @@ public interface TaskAssigneeBehavior {
     List<TaskAssignee> findTaskAssignees(RuntimeContext context);
 
     boolean completed(RuntimeContext context);
+
+    void beforeComplete(List<TaskAssignee> taskAssignees,RuntimeContext context);
 }

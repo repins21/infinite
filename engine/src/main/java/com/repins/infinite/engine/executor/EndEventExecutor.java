@@ -15,6 +15,9 @@ public class EndEventExecutor extends AbstractActivityExecutor {
 
     @Override
     protected boolean complete(RuntimeContext runtimeContext) {
+        runtimeContext
+                .getPersistentExecutions()
+                .add(buildExecution(runtimeContext, runtimeContext.getCurElement(), runtimeContext.getProcessInstance()));
         return true;
     }
 
@@ -28,6 +31,5 @@ public class EndEventExecutor extends AbstractActivityExecutor {
         ProcessInstance processInstance = runtimeContext.getProcessInstance();
         processInstance.setProcessState(ProcessInstanceState.END.getState());
         processInstance.setEndTime(LocalDateTime.now());
-        runtimeContext.setCompletedProcessInstance(processInstance);
     }
 }

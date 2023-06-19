@@ -31,4 +31,12 @@
         </set>
         where process_instance_id = #{processInstanceId}
     </update>
+    <select id="selectByProcessInstanceIdAndState"
+            resultType="com.repins.infinite.engine.model.ProcessInstance">
+        select
+            <include refid="baseColumns"></include>
+        from inf_ru_process_instance
+        where process_instance_id = #{processInstanceId}
+        and process_state = #{state}
+    </select>
 </mapper>

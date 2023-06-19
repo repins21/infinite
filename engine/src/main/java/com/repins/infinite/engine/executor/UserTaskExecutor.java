@@ -1,8 +1,10 @@
 package com.repins.infinite.engine.executor;
 
 import com.repins.infinite.engine.behavior.TaskAssigneeBehavior;
+import com.repins.infinite.engine.behavior.TaskBehaviorFactory;
 import com.repins.infinite.engine.context.RuntimeContext;
 import com.repins.infinite.engine.element.base.BaseElement;
+import com.repins.infinite.engine.element.task.UserTask;
 import com.repins.infinite.engine.model.Execution;
 import com.repins.infinite.engine.model.ProcessInstance;
 import com.repins.infinite.engine.model.TaskAssignee;
@@ -18,23 +20,33 @@ public class UserTaskExecutor extends AbstractActivityExecutor {
 
     @Override
     protected void active(RuntimeContext runtimeContext) {
+        UserTask userTask = (UserTask) runtimeContext.getCurElement();
         Execution execution =
-                buildExecution(runtimeContext, runtimeContext.getCurElement(), runtimeContext.getProcessInstance());
+                buildExecution(runtimeContext, userTask, runtimeContext.getProcessInstance());
         execution.setState(ExecutionState.ACTIVE.getState());
-
-        TaskAssigneeBehavior taskAssigneeBehavior = runtimeContext.getProcessEngineConfiguration().getTaskAssigneeBehavior();
+        TaskBehaviorFactory taskBehaviorFactory = runtimeContext.getProcessEngineConfiguration().getTaskBehaviorFactory();
+        TaskAssigneeBehavior taskAssigneeBehavior = taskBehaviorFactory.getTaskAssigneeBehavior(userTask.getAssigneeBehavior());
         List<TaskAssignee> taskAssignees = taskAssigneeBehavior.findTaskAssignees(runtimeContext);
         runtimeContext.getPersistentExecutions().add(execution);
         List<TaskInstance> tasks = runtimeContext.getPersistentTasks();
         taskAssignees.forEach(taskAssignee -> tasks.add(buildUserTaskInstance(runtimeContext, taskAssignee, execution)));
+        taskAssigneeBehavior.beforeComplete(taskAssignees,runtimeContext);
     }
 
     @Override
     protected boolean complete(RuntimeContext runtimeContext) {
-        boolean completed = runtimeContext.getProcessEngineConfiguration().getTaskAssigneeBehavior().completed(runtimeContext);
+        UserTask userTask = (UserTask) runtimeContext.getCurElement();
+
+        boolean completed = runtimeContext
+                .getProcessEngineConfiguration()
+                .getTaskBehaviorFactory()
+                .getTaskAssigneeBehavior(userTask.getAssigneeBehavior())
+                .completed(runtimeContext);
+
         if (completed) {
             updateExecution(runtimeContext);
         }
+
         return completed;
     }
 

@@ -37,18 +37,9 @@ public class RuntimeContext {
 
     private TaskInstance preTaskInstance;
 
-    private ProcessInstance completedProcessInstance;
 
     private ProcessEngineConfiguration processEngineConfiguration;
 
-
-    public ProcessInstance getCompletedProcessInstance() {
-        return completedProcessInstance;
-    }
-
-    public void setCompletedProcessInstance(ProcessInstance completedProcessInstance) {
-        this.completedProcessInstance = completedProcessInstance;
-    }
 
     public List<Execution> getUpdateExecutions() {
         if (this.updateExecutions == null){

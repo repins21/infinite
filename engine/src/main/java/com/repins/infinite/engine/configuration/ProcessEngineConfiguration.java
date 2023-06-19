@@ -2,6 +2,7 @@ package com.repins.infinite.engine.configuration;
 
 import com.repins.infinite.engine.ProcessEngine;
 import com.repins.infinite.engine.behavior.TaskAssigneeBehavior;
+import com.repins.infinite.engine.behavior.TaskBehaviorFactory;
 import com.repins.infinite.engine.context.GlobalContext;
 import com.repins.infinite.engine.db.DatabaseType;
 import com.repins.infinite.engine.executor.factory.AbstractActivityExecutorFactory;
@@ -58,8 +59,8 @@ public interface ProcessEngineConfiguration {
     void setAbstractActivityFactory(AbstractActivityExecutorFactory abstractActivityFactory);
 
     //todo tasks could have different behavior
-    TaskAssigneeBehavior getTaskAssigneeBehavior();
+    TaskBehaviorFactory getTaskBehaviorFactory();
 
-    void setTaskAssigneeBehavior(TaskAssigneeBehavior taskAssigneeBehavior);
+    void setTaskBehaviorFactory(TaskBehaviorFactory taskBehaviorFactory);
 
 }
