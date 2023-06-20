@@ -1,10 +1,9 @@
 package com.repins.infinite.engine.behavior;
 
-public class TaskBehaviorFactory {
+public interface TaskBehaviorFactory {
 
-    private TaskAssigneeBehavior taskAssigneeBehavior;
 
-    public TaskAssigneeBehavior getTaskAssigneeBehavior() {
-        return new NormalTaskAssigneeBehavior();
-    }
+    TaskAssigneeBehavior getTaskAssigneeBehavior(String assigneeBehavior);
+
+    void aware();
 }

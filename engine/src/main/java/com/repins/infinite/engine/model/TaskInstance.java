@@ -10,6 +10,8 @@ public class TaskInstance {
 
     private String executionId;
 
+    private String deploymentVersionId;
+
     private String processInstanceId;
 
     private String elementName;
@@ -26,13 +28,29 @@ public class TaskInstance {
 
     private String owner;
 
-
     private Integer instanceState;
 
     private LocalDateTime startTime;
 
     private LocalDateTime endTime;
 
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getDeploymentVersionId() {
+        return deploymentVersionId;
+    }
+
+    public void setDeploymentVersionId(String deploymentVersionId) {
+        this.deploymentVersionId = deploymentVersionId;
+    }
 
     public String getAssigneeType() {
         return assigneeType;

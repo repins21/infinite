@@ -1,6 +1,7 @@
 package com.repins.infinite.engine.configuration;
 
 import com.repins.infinite.engine.ProcessEngine;
+import com.repins.infinite.engine.behavior.DefaultTaskBehaviorFactory;
 import com.repins.infinite.engine.behavior.TaskAssigneeBehavior;
 import com.repins.infinite.engine.behavior.TaskBehaviorFactory;
 import com.repins.infinite.engine.cache.local.LocalDeploymentRuntimeCacheStrategy;
@@ -32,7 +33,7 @@ public class DefaultProcessEngineConfiguration implements ProcessEngineConfigura
     private ProcessEngine processEngine;
     private GlobalContext globalContext;
     private AbstractActivityExecutorFactory activityFactory;
-    private TaskAssigneeBehavior taskAssigneeBehavior;
+    private TaskBehaviorFactory taskBehaviorFactory;
 
 
     public DefaultProcessEngineConfiguration() {
@@ -49,7 +50,7 @@ public class DefaultProcessEngineConfiguration implements ProcessEngineConfigura
         processEngineConfiguration.setIdGenerator(new DefaultUuidGenerator());
         processEngineConfiguration.setGlobalContext(new GlobalContext(new LocalDeploymentRuntimeCacheStrategy()));
         processEngineConfiguration.setAbstractActivityFactory(new DefaultActivityExecutorFactory());
-        processEngineConfiguration.setTaskAssigneeBehavior(new TaskBehaviorFactory().getTaskAssigneeBehavior());
+        processEngineConfiguration.setTaskBehaviorFactory(new DefaultTaskBehaviorFactory());
         return processEngineConfiguration;
     }
 
@@ -151,19 +152,19 @@ public class DefaultProcessEngineConfiguration implements ProcessEngineConfigura
         this.activityFactory = abstractActivityFactory;
     }
 
-    @Override
-    public TaskAssigneeBehavior getTaskAssigneeBehavior() {
-        return this.taskAssigneeBehavior;
-    }
-
-    @Override
-    public void setTaskAssigneeBehavior(TaskAssigneeBehavior taskAssigneeBehavior) {
-        this.taskAssigneeBehavior = taskAssigneeBehavior;
-    }
 
     @Override
     public void setGlobalContext(GlobalContext globalContext) {
         this.globalContext = globalContext;
     }
 
+    @Override
+    public TaskBehaviorFactory getTaskBehaviorFactory() {
+        return this.taskBehaviorFactory;
+    }
+
+    @Override
+    public void setTaskBehaviorFactory(TaskBehaviorFactory taskBehaviorFactory) {
+        this.taskBehaviorFactory = taskBehaviorFactory;
+    }
 }

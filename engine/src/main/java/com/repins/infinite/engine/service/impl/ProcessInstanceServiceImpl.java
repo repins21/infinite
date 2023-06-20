@@ -23,9 +23,7 @@ import java.util.stream.Collectors;
 
 @InfiniteService
 public class ProcessInstanceServiceImpl implements ProcessInstanceService {
-    private ProcessRepository processRepository;
     private ProcessEngineConfiguration processEngineConfiguration;
-    private DeploymentService deploymentService;
     private GlobalContext globalContext;
 
     @Override
@@ -54,7 +52,6 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
         runtimeContext.setStartEvent(startEvent);
         runtimeContext.setGlobalContext(globalContext);
         runtimeContext.setProcessEngineConfiguration(processEngineConfiguration);
-        runtimeContext.setProcessInstanceRepository(processRepository);
         runtimeContext.setActivityExecutorFactory(processEngineConfiguration.getAbstractActivityFactory());
         return runtimeContext;
     }
@@ -75,7 +72,6 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
     @Override
     public void setProcessEngineConfiguration(ProcessEngineConfiguration processEngineConfiguration) {
         this.processEngineConfiguration = processEngineConfiguration;
-        this.deploymentService = processEngineConfiguration.getProcessEngineServiceFinder().findDeploymentService();
         this.globalContext = processEngineConfiguration.getGlobalContext();
     }
 
@@ -86,7 +82,7 @@ public class ProcessInstanceServiceImpl implements ProcessInstanceService {
 
     @Override
     public void setProcessRepository(ProcessRepository processRepository) {
-        this.processRepository = processRepository;
+
     }
 
     @Override

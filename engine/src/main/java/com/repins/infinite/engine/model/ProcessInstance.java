@@ -22,6 +22,9 @@ public class ProcessInstance {
 
     private Integer processState;
 
+    public ProcessInstance() {
+    }
+
     public LocalDateTime getEndTime() {
         return endTime;
     }

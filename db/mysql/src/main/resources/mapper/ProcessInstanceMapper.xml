@@ -19,4 +19,24 @@
         insert into inf_ru_process_instance(<include refid="baseColumns"></include>)
         values (#{id},#{name},#{deploymentId},#{deploymentVersionId},#{processInstanceId},#{startBy},#{startTime},#{endTime},#{processState})
     </insert>
+    <update id="updateProcessInstance">
+        update inf_ru_process_instance
+        <set>
+            <if test="processState != null">
+                process_state = #{processState},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime},
+            </if>
+        </set>
+        where process_instance_id = #{processInstanceId}
+    </update>
+    <select id="selectByProcessInstanceIdAndState"
+            resultType="com.repins.infinite.engine.model.ProcessInstance">
+        select
+            <include refid="baseColumns"></include>
+        from inf_ru_process_instance
+        where process_instance_id = #{processInstanceId}
+        and process_state = #{state}
+    </select>
 </mapper>
